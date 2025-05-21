@@ -14,7 +14,7 @@ class Order(models.Model):
         CANCELLED = "Cancelled" # Order was cancelled on any of the given stages
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    products = models.ManyToManyField(Product, through='OrderItem', related_name="orders")
+    products = models.ManyToManyField('Product', through='OrderItem', related_name="orders")
     status = models.CharField(max_length=15, choices=StatusChoices.choices, default=StatusChoices.NEW)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
@@ -29,8 +29,8 @@ class Order(models.Model):
             return f"Order {self.id} by deleted user."
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     @property
