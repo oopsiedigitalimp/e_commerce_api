@@ -44,14 +44,15 @@ INSTALLED_APPS = [
     'django_filters',
 ] + [
     'users',
-    'orders',
     'products',
-
+    'orders',
+    'carts',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'carts.middleware.EnsureCartMiddleware', # Middlware for creating cart of the session if not exists
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
