@@ -1,10 +1,10 @@
 import django_filters
-from .models import Product
+from .models import Product, ProductCategory
 
 class ProductFilter(django_filters.FilterSet):
     price_min = django_filters.NumberFilter(field_name='price', lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name='price', lookup_expr='lte')
-    category = django_filters.CharFilter(field_name='category__name', lookup_expr='iexact')
+    category = django_filters.CharFilter(method='filter_category')
     in_stock = django_filters.BooleanFilter(method='filter_in_stock')
 
     class Meta:
@@ -17,6 +17,12 @@ class ProductFilter(django_filters.FilterSet):
         else:
             return queryset.filter(stock=0)
         
-    #
-    # ДОБАВИТЬ ФИЛЬТРАЦИЮ НЕ ТОЛЬКО ПО КОНЕЧНОЙ НО И ПО ОБЩИМ КАТЕГОРИЯМ
-    #
+    def filter_category(self, queryset, name, value):
+        try:
+            category = ProductCategory.objects.get(name__iexact=value)
+        except:
+            return queryset.none()
+        
+        categories = category.get_descendants(include_self=True)
+
+        return queryset.filter(category__in=categories)

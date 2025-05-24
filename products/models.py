@@ -61,9 +61,24 @@ class ProductCategory(models.Model):
 
         return ancestors
 
+    def get_descendants(self, include_self=False):
+        descendants = []
+        category = self
+
+        def collect_children(cat):
+            for child in cat.subcategories.all():
+                descendants.append(child)
+                collect_children(child)
+
+        if include_self == True:
+            descendants.append(category)
+        
+        collect_children(category)
+
+        return descendants
 
     def get_full_letter_code(self):
-        return ''.join(c.code for c in self.get_ancestors(include_self=True))
+        return ''.join(c.letter_code for c in self.get_ancestors(include_self=True))
     
     def get_full_path(self):
         return "/".join(c.name for c in self.get_ancestors(include_self=True))
