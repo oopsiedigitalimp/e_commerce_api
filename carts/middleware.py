@@ -10,7 +10,7 @@ class EnsureCartMiddleware:
 
         session_key = request.session.session_key
         
-        if not request.user.is_authenticated:
+        if request.user.is_authenticated:
             cart, created = Cart.objects.get_or_create(user=request.user, is_active=True)
         else:
             cart, created = Cart.objects.get_or_create(session_key=session_key, is_active = True)

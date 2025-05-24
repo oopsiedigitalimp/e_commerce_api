@@ -13,7 +13,7 @@ class Product(models.Model):
     stock = models.PositiveIntegerField(default=0)
     # article_number is a unique id wich serves for Users usage
     # must be automaticly genereated with category.letter_code and article_seq_number (example: ELSP-120, EL - ELectronics, SP - SmartPhones, 120 - product number)
-    article_number = models.CharField(max_length=30, unique=True)
+    article_number = models.CharField(max_length=30, unique=True, blank=True)
     # assambling parameter for an article_number, unique id for its category
     article_seq_number = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,13 +47,23 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_full_letter_code(self):
-        codes = []
+    
+    def get_ancestors(self, include_self=False):
+        ancestors = []
         category = self
 
-        while category:
-            codes.insert(0, category.letter_code)
-            category = category.parent
+        if include_self == True:
+            ancestors.insert(0, category)
         
-        return ''.join(codes)
+        while category.parent:
+            ancestors.insert(0, category.parent)
+            category = category.parent
+
+        return ancestors
+
+
+    def get_full_letter_code(self):
+        return ''.join(c.code for c in self.get_ancestors(include_self=True))
+    
+    def get_full_path(self):
+        return "/".join(c.name for c in self.get_ancestors(include_self=True))

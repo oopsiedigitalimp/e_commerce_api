@@ -52,12 +52,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'carts.middleware.EnsureCartMiddleware', # Middlware for creating cart of the session if not exists
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'carts.middleware.EnsureCartMiddleware', # Middlware for creating cart of the session if not exists
 ]
 
 ROOT_URLCONF = 'e_commerce_api.urls'
