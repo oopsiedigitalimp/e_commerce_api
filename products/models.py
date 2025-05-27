@@ -20,7 +20,7 @@ class Product(models.Model):
     last_updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name}, price:{self.price}"
+        return f"{self.name}"
     
     def save(self, *args, **kwargs):
         if self.category.subcategories.exists():
