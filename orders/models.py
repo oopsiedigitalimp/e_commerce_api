@@ -22,7 +22,7 @@ class Order(models.Model):
     status = models.CharField(max_length=15, choices=StatusChoices.choices, default=StatusChoices.NEW)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
-    comment = models.TextField(blank=True)
+    comment = models.TextField(null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
@@ -37,7 +37,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField()
 
     @property
-    def item_subtotal(self):
+    def get_subtotal(self):
         return self.product.price * self.quantity
     
     def __str__(self):

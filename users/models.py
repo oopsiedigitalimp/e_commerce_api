@@ -29,8 +29,8 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     username = None
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=150, default="Noname")
+    last_name = models.CharField(max_length=150, default="Noname")
 
     class RoleChoices(models.TextChoices):
         ADMIN = "Admin"
@@ -41,6 +41,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False, null=False)
     role = models.CharField(max_length=10, choices=RoleChoices.choices, default=RoleChoices.CUSTOMER)
     is_verified = models.BooleanField(blank=True, default=False)
+    shipping_address = models.CharField(max_length=500, null=True)
     
     # TO DO: Add phone number field and authorization with django-phonenumber-field package
     # from phonenumber_field.modelfields import PhoneNumberField

@@ -1,8 +1,8 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import Order, OrderItem
 from products.serializers import CustomerProductSerializer
 
-class OrderItemSerializer(ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     product = CustomerProductSerializer()
 
     class Meta:
@@ -13,7 +13,7 @@ class OrderItemSerializer(ModelSerializer):
             'get_subtotal'
         )
 
-class OrderSerializer(ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
 
     class Meta:
