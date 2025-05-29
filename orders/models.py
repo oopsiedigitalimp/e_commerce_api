@@ -14,13 +14,16 @@ class Order(models.Model):
         CANCELLED = "Cancelled" # Order was cancelled on any of the given stages
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    customer_first_name = models.CharField(max_length=200, default='Noname')
+    customer_last_name = models.CharField(max_length=200, default='Noname')
+    shipping_address = models.CharField(max_length=500)
+
     products = models.ManyToManyField('products.Product', through='OrderItem', related_name="orders")
     status = models.CharField(max_length=15, choices=StatusChoices.choices, default=StatusChoices.NEW)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
     comment = models.TextField(blank=True)
-    price_at_purchase = models.DecimalField(max_digits=10, decimal_places=2)
-    shipping_address = models.CharField(max_length=500)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         if self.user:
