@@ -4,7 +4,7 @@ from django.db import transaction
 
 class Product(models.Model):
     # id field is used for inner system usage in purpouse to keep all products unique and avoid conflicts
-    # id field must not be seen/be used by user. For acces an object must be used article_number
+    # id field must not be seen/be used by user. For access an object must be used article_number
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True)
     name = models.CharField(max_length=200)
     description = models.TextField()
