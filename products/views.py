@@ -16,7 +16,7 @@ class ProductListCreateAPIView(RoleBasedSerializerMixin, generics.ListCreateAPIV
     ordering_fields = ['price', 'name', 'created_at']
     ordering = ['-created_at']
     
-class ProductRetrieveUpdateDestroyByArticleNumberAPIView(RoleBasedSerializerMixin, generics.RetrieveUpdateDestroyAPIView):
+class ProductRetrieveByArticleNumberAPIView(RoleBasedSerializerMixin, generics.RetrieveAPIView):
     queryset = Product.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'article_number'

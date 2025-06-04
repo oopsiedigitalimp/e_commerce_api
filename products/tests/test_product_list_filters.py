@@ -4,7 +4,7 @@ from users.models import User
 from products.models import Product, ProductCategory
 
 @pytest.mark.django_db
-def test_product_list_success():
+def test_product_list_filters_success():
     client = APIClient()
 
     admin = User.objects.create_user(email='admin@test.com', password="12345", role='Admin')
