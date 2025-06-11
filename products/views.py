@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, filters
+from rest_framework import generics, filters, viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsAdminOrReadOnly
 from .models import Product, ProductCategory
@@ -25,7 +25,7 @@ class ProductRetrieveUpdateDestroyAPIView(RoleBasedSerializerMixin, generics.Ret
     queryset = Product.objects.all()
     permission_classes = [IsAdminOrReadOnly]
 
-class ProductCategoryListCreateAPIView(generics.ListCreateAPIView):
+class ProductCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
     permission_classes = [IsAdminOrReadOnly]

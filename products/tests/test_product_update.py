@@ -1,4 +1,5 @@
 import pytest
+from django.urls import reverse
 from rest_framework.test import APIClient
 from users.models import User
 from products.models import Product, ProductCategory
@@ -14,7 +15,8 @@ def test_product_update_by_article_number_success():
     product1 = Product.objects.create(name="Product1", description="This is a great product!", price=13.99, category=category)
     product2 = Product.objects.create(name="Product2", description="This is a great product!", price=14.99, category=category)
 
-    response = client.get(f"/products/{product1.id}/")
+    url = reverse('products:items:get_product_by_id', kwargs={'pk': f'{product1.id}'})
+    response = client.get(url)
 
     assert response.data['name'] == "Product1"
 
@@ -22,6 +24,6 @@ def test_product_update_by_article_number_success():
         'name': "Updated Product"
     }
 
-    response = client.patch(f"/products/{product1.id}/", data)
+    response = client.patch(url, data)
 
     assert response.data['name'] == "Updated Product"

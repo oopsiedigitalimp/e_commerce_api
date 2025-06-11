@@ -1,4 +1,5 @@
 import pytest
+from django.urls import reverse
 from rest_framework.test import APIClient
 from users.models import User
 from products.models import Product, ProductCategory
@@ -19,7 +20,8 @@ def test_create_product_success():
         "category_id": category.id
     }
 
-    response = client.post("/products/", payload, format='json')
+    url = reverse('products:items:product-list')
+    response = client.post(url, payload, format='json')
     
     assert response.status_code == 201
 

@@ -1,4 +1,5 @@
 import pytest
+from django.urls import reverse
 from rest_framework.test import APIClient
 from users.models import User
 from products.models import Product, ProductCategory
@@ -13,7 +14,9 @@ def test_category_list_success():
     ProductCategory.objects.create(name="category1", letter_code="ZZA")
     ProductCategory.objects.create(name="category2", letter_code="ZZB")
 
-    response = client.get("/products/categories/")
+    url = reverse('products:category-list')
+    print(url)
+    response = client.get(url)
     
     assert response.status_code == 200
     assert response.data['count'] == 2
