@@ -5,45 +5,18 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
 from rest_framework.exceptions import NotFound, ValidationError
 from .models import CartItem, Cart
-from .serializers import CartItemSerializer, CartSerializer
+from .serializers import CartItemSerializer, CartSerializer, CartItemOperationSerializator
 from products.models import Product
 
 class CartGetChangeAPIView(APIView):
-    def get_product_or_404(self, request):
-        product_id = request.data.get('product_id', None)
-        product_article_number = request.data.get('product_article_number', None)
-
-        if product_id:
-            try:
-                return Product.objects.get(id=product_id)
-            except Product.DoesNotExist:
-                raise NotFound('Product not found by product_id.')
-            
-        if product_article_number:
-            try:
-                return Product.objects.get(article_number=product_article_number)
-            except Product.DoesNotExist:
-                raise NotFound('Product not found by article_number.')
-            
-        raise NotFound('Product not found — no identifier provided.')
-
-    def get_quantity_or_404(self, request):
-        quantity = request.data.get('quantity', 1)
-
-        try:
-            quantity = int(quantity)
-            if quantity <= 0:
-                raise ValidationError('Quantity must be a positive integer.')
-        except:
-            raise ValidationError('Quantity must be a positive integer.')
-        
-        return quantity
-        
-
     def post(self, request):
+        serializer = CartItemOperationSerializator(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated = serializer.validated_data
+
         cart = request.cart
-        quantity = self.get_quantity_or_404(request)
-        product = self.get_product_or_404(request)
+        quantity = self.validated['quantity']
+        product = self.validated['product']
     
         item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
@@ -56,8 +29,12 @@ class CartGetChangeAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def delete(self, request):
+        serializer = CartItemOperationSerializator(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated = serializer.validated_data
+
         cart = request.cart
-        product = self.get_product_or_404(request)
+        product = self.validated['product']
 
         try:
             item = CartItem.objects.get(cart=cart, product_id=product.id)
@@ -67,9 +44,13 @@ class CartGetChangeAPIView(APIView):
             return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
         
     def patch(self, request):
+        serializer = CartItemOperationSerializator(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated = serializer.validated_data
+
         cart = request.cart
-        product = self.get_product_or_404(request)
-        quantity = self.get_quantity_or_404(request)
+        product = self.validated['product']
+        quantity = self.validated['quantity']
 
         try:
             item = CartItem.objects.get(cart=cart, product_id=product.id)
