@@ -3,7 +3,7 @@ from django.conf import settings
 from products.models import Product
 
 class Cart(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='carts')
     session_key = models.CharField(max_length=40, null=True, blank=True, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)

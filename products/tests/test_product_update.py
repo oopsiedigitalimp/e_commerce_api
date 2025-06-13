@@ -20,10 +20,11 @@ def test_product_update_by_article_number_success():
 
     assert response.data['name'] == "Product1"
 
-    data = {
+    payload = {
         'name': "Updated Product"
     }
 
-    response = client.patch(url, data)
+    response = client.patch(url, payload)
 
-    assert response.data['name'] == "Updated Product"
+    assert response.status_code == 200
+    assert response.data['name'] == payload['name']

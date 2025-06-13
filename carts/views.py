@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import status, generics
+from rest_framework import status, generics, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser
@@ -15,8 +15,8 @@ class CartGetChangeAPIView(APIView):
         validated = serializer.validated_data
 
         cart = request.cart
-        quantity = self.validated['quantity']
-        product = self.validated['product']
+        quantity = validated['quantity']
+        product = validated['product']
     
         item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
@@ -34,7 +34,7 @@ class CartGetChangeAPIView(APIView):
         validated = serializer.validated_data
 
         cart = request.cart
-        product = self.validated['product']
+        product = validated['product']
 
         try:
             item = CartItem.objects.get(cart=cart, product_id=product.id)
@@ -49,8 +49,8 @@ class CartGetChangeAPIView(APIView):
         validated = serializer.validated_data
 
         cart = request.cart
-        product = self.validated['product']
-        quantity = self.validated['quantity']
+        product = validated['product']
+        quantity = validated['quantity']
 
         try:
             item = CartItem.objects.get(cart=cart, product_id=product.id)
@@ -90,4 +90,6 @@ class CartClearAPIView(APIView):
 class CartListAPIView(generics.ListAPIView):
     queryset = Cart.objects.all()
     permission_classes = [IsAdminUser]
+    filter_backends = [filters.OrderingFilter]
+    ordering = ['-created_at']
     serializer_class = CartSerializer
