@@ -21,7 +21,7 @@ def test_product_list_filters_success():
     Product.objects.create(name='Product3', description="It is a great product!", price=3.99, category=category3)
     Product.objects.create(name='Product4', description="It is a great product!", price=4.99, category=category4)
 
-    url = reverse('products:items:product-list')
+    url = reverse('products:product-list')
     response = client.get(f"{url}?price_min=4")
     
     assert response.status_code == 200

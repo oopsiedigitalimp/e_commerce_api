@@ -7,14 +7,9 @@ app_name = 'products'
 
 router = DefaultRouter()
 router.register(r'category', views.ProductCategoryViewSet, basename='category')
-
-product_urls = [
-    path('', views.ProductListCreateAPIView.as_view(), name='product-list'),
-    path('<uuid:pk>/', views.ProductRetrieveUpdateDestroyAPIView.as_view(), name='get_product_by_id'),
-    path('<str:article_number>/', views.ProductRetrieveByArticleNumberAPIView.as_view(), name='get_product_by_article_number'),
-]
+router.register(r'product', views.ProductViewSet, basename='product')
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('items/', include((product_urls, 'products'), namespace='items')),
+    path('', include((router.urls))),
+    path('categories/', include((router.urls, 'products'), namespace='categories')),
 ]

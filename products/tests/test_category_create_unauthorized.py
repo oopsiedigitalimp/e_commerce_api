@@ -13,7 +13,7 @@ def test_create_category_unauthorized():
         'letter_code': "ZZ"
     }
 
-    url = reverse('products:category-list')
+    url = reverse('products:categories:category-list')
     response = client.post(url, payload)
 
     assert response.status_code == 401

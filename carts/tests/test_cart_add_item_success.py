@@ -37,7 +37,7 @@ def test_cart_add_item_by_article_number_success():
     product = Product.objects.create(name="Product", description="This is a great product!", price=13.99, category=category, stock=10)
 
     payload = {
-        'product_articl_number': product.article_number
+        'product_article_number': product.article_number
     }
 
     url = reverse('carts:cart-detail')

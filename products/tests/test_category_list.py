@@ -14,7 +14,7 @@ def test_category_list_success():
     ProductCategory.objects.create(name="category1", letter_code="ZZA")
     ProductCategory.objects.create(name="category2", letter_code="ZZB")
 
-    url = reverse('products:category-list')
+    url = reverse('products:categories:category-list')
     print(url)
     response = client.get(url)
     

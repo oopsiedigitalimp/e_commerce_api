@@ -15,7 +15,7 @@ def test_product_list_success():
     Product.objects.create(name='Product1', description="It is a great product!", price=1.99, category=category)
     Product.objects.create(name='Product2', description="It is a great product!", price=1.99, category=category)
 
-    url = reverse('products:items:product-list')
+    url = reverse('products:product-list')
     response = client.get(url)
     
     assert response.status_code == 200

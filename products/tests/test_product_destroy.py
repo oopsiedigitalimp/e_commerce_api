@@ -5,7 +5,7 @@ from users.models import User
 from products.models import Product, ProductCategory
 
 @pytest.mark.django_db
-def test_product_update_by_article_number_success():
+def test_product_delete_success():
     client = APIClient()
 
     admin = User.objects.create_user(email='admin@test.com', password="12345", role='Admin')
@@ -14,7 +14,7 @@ def test_product_update_by_article_number_success():
     category = ProductCategory.objects.create(name="category1", letter_code="ZZ")
     product = Product.objects.create(name="Product1", description="This is a great product!", price=13.99, category=category)
 
-    url = reverse('products:items:get_product_by_article_number', kwargs={'article_number': f'{product.id}'})
+    url = reverse('products:product-detail', kwargs={'pk': f'{product.id}'})
     response = client.get(url)
 
     assert response.status_code == 200

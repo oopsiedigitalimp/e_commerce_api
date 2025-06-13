@@ -15,7 +15,7 @@ def test_create_category_success():
         'name': "Category1",
         'letter_code': "ZZ"
     }
-    url = reverse('products:category-list')
+    url = reverse('products:categories:category-list')
     response = client.post(url, payload, format='json')
 
     assert response.status_code == 201

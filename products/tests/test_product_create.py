@@ -20,7 +20,7 @@ def test_create_product_success():
         "category_id": category.id
     }
 
-    url = reverse('products:items:product-list')
+    url = reverse('products:product-list')
     response = client.post(url, payload, format='json')
     
     assert response.status_code == 201
