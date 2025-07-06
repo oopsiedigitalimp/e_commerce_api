@@ -1,26 +1,33 @@
 from django.shortcuts import render
-from rest_framework import status, generics
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
+from rest_framework import status, generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from users.models import User
 from products.models import Product
 from products.permissions import IsAdminOrReadOnly
 from .mixins import OrderQuerysetRoleBasedMixin
 from .serializers import OrderSerializer, OrderItemSerializer, CreateOrderSerializer
 from .models import Order, OrderItem
+from .filters import OrderFilter
 
-class OrderListAPIView(OrderQuerysetRoleBasedMixin, generics.ListAPIView):
-    serializer_class = OrderSerializer
+@method_decorator(cache_page(60 * 5, key_prefix='product-list'), name='list')
+@method_decorator(vary_on_headers("Authorization"), name='list')
+class OrderViewSet(OrderQuerysetRoleBasedMixin, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
+    filterset_class = OrderFilter
+    filter_backends = [DjangoFilterBackend]
 
-class OrderRetrieveUpdateDestroyAPIView(OrderQuerysetRoleBasedMixin, generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = OrderSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateOrderSerializer
+        return OrderSerializer
 
-class OrderCreateAPIView(APIView):
-    def post(self, request):
-        serializer = CreateOrderSerializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        order = serializer.save()
-        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        user = self.request.user if self.request.user.is_authenticated else None
+        serializer.save(user=user)

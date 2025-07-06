@@ -47,15 +47,16 @@ class CreateOrderSerializer(serializers.Serializer):
             raise serializers.ValidationError("Cart is empty.")
         
         for item in cart.items.all():
-            if item.quantity > item.product.quantity:
+            if item.quantity > item.product.stock:
                 raise serializers.ValidationError({
                 "error": "Недостаточно товара на складе",
                 "product": item.product.name,
+                "article_number": item.product.article_number,
                 "available": item.product.quantity,
-                "requested": item.quantity
+                "requested": item.quantity,
             })
 
-        return 
+        return data
     
     def create(self, validated_data):
         request = self.context['request']

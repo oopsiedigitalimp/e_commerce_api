@@ -10,6 +10,6 @@ router.register(r'category', views.ProductCategoryViewSet, basename='category')
 router.register(r'product', views.ProductViewSet, basename='product')
 
 urlpatterns = [
-    path('', include((router.urls))),
+    path('', include(router.urls)),
     path('categories/', include((router.urls, 'products'), namespace='categories')),
 ]

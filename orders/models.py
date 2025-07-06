@@ -17,6 +17,7 @@ class Order(models.Model):
     customer_first_name = models.CharField(max_length=200, default='Noname')
     customer_last_name = models.CharField(max_length=200, default='Noname')
     shipping_address = models.CharField(max_length=500)
+    customer_email = models.EmailField(blank=False, null=False, default='')
 
     products = models.ManyToManyField('products.Product', through='OrderItem', related_name="orders")
     status = models.CharField(max_length=15, choices=StatusChoices.choices, default=StatusChoices.NEW)

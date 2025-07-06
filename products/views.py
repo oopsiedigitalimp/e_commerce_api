@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import generics, filters, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,6 +11,7 @@ from .mixins import RoleBasedSerializerMixin
 from .filters import ProductFilter
 from .serializers import ProductCategorySerializer
 
+@method_decorator(cache_page(60 * 5, key_prefix='product-list'), name='list')
 class ProductViewSet(RoleBasedSerializerMixin, viewsets.ModelViewSet):
     queryset = Product.objects.all()
     permission_classes = [IsAdminOrReadOnly]
